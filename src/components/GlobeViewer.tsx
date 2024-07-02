@@ -34,7 +34,7 @@ const GlobeViewer = ({countries, mostArtistsCountry, targetCountryData}: Artists
     const writeImage = async (email: string, imageData: string) => {
         const { success, id } = await addImage(email, imageData)
         if (success) {
-            const url = window.location.origin + "/image/" + id
+            const url = import.meta.env.VITE_BACKEND_URL + "/image/" + id
             setShareableLink(url)
             window.open(`https://twitter.com/intent/tweet?url=${url}`)
         }
