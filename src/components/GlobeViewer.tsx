@@ -19,6 +19,7 @@ const GlobeViewer = ({countries, mostArtistsCountry, targetCountryData}: Artists
     const [shareableLink, setShareableLink] = useState('')
     const { addImage } = useSoundglobeBackend()
     const { globePOV, userEmail, appGlobeRef } = useAppContext()
+    const [isCreatingLink, setIsCreatingLink] = useState(false)
 
     const handleAnalysisDone = () => {
         if (!appGlobeRef.current) return
@@ -42,11 +43,11 @@ const GlobeViewer = ({countries, mostArtistsCountry, targetCountryData}: Artists
 
     const handleShare = () => {
         if (!appGlobeRef.current) return
-
+        setIsCreatingLink(true)
         const renderer = appGlobeRef.current.renderer()
         const imageDataFromGlobe: string = renderer.domElement.toDataURL('image/jpeg', 0.5)
 
-        writeImage(userEmail, imageDataFromGlobe)
+        writeImage(userEmail, imageDataFromGlobe).finally(() => setIsCreatingLink(false))
     }
 
     useEffect(() => {
@@ -80,8 +81,8 @@ const GlobeViewer = ({countries, mostArtistsCountry, targetCountryData}: Artists
             <div className="w-full aspect-square sm:max-w-[500px] bg-black" ref={globeDivRef}>
                 <ArtistsGlobe countries={countries} mostArtistsCountry={mostArtistsCountry} targetCountryData={targetCountryData} handleAnalysisDone={handleAnalysisDone} canvasSize={canvasSize}/>
             </div>
-            <div className="bg-black text-white px-8 py-2 rounded-full border-2 border-white font-bold hover:cursor-pointer" onClick={handleShare}>
-                Share with friends
+            <div className={`bg-black text-white px-8 py-2 rounded-full border-2 border-white font-bold hover:cursor-pointer ${isCreatingLink ? 'opacity-70' : ''}`} onClick={handleShare}>
+                {isCreatingLink ? 'Creating link...' : 'Share with friends'}
             </div>
             {shareableLink}
         </div>
