@@ -1,6 +1,6 @@
 import ArtistsGlobe from './ArtistsGlobe'
 import { useEffect, useRef, useState } from 'react'
-import {GlobeMethods} from 'react-globe.gl'
+// import {GlobeMethods} from 'react-globe.gl'
 import { useSoundglobeBackend } from '../hooks/useSoundglobeBackend'
 import { Country, Point, TargetCountryData } from '../constants'
 import { useAppContext } from '../hooks/useAppContext'
@@ -15,16 +15,16 @@ const GlobeViewer = ({countries, mostArtistsCountry, targetCountryData}: Artists
 
     const globeDivRef = useRef<HTMLDivElement>(null)
     const [canvasSize, setCanvasSize] = useState(window.innerWidth > 500 ? 500 : window.innerWidth)
-    const globeRef = useRef<GlobeMethods>(null)
+    // const globeRef = useRef<GlobeMethods | undefined>()
     const [shareableLink, setShareableLink] = useState('')
     const { addImage } = useSoundglobeBackend()
-    const { globePOV, userEmail } = useAppContext()
+    const { globePOV, userEmail, appGlobeRef } = useAppContext()
 
     const handleAnalysisDone = () => {
-        if (!globeRef.current) return
+        if (!appGlobeRef.current) return
         // console.log('POV', globePOV)
         if (globePOV.latitude){
-            globeRef.current.pointOfView({
+            appGlobeRef.current.pointOfView({
                 lng: globePOV.longitude,
                 lat: globePOV.latitude
             })
@@ -41,9 +41,9 @@ const GlobeViewer = ({countries, mostArtistsCountry, targetCountryData}: Artists
     }
 
     const handleShare = () => {
-        if (!globeRef.current) return
+        if (!appGlobeRef.current) return
 
-        const renderer = globeRef.current.renderer()
+        const renderer = appGlobeRef.current.renderer()
         const imageDataFromGlobe: string = renderer.domElement.toDataURL('image/jpeg', 0.5)
 
         writeImage(userEmail, imageDataFromGlobe)
@@ -78,11 +78,12 @@ const GlobeViewer = ({countries, mostArtistsCountry, targetCountryData}: Artists
                 Your music map
             </div>
             <div className="w-full aspect-square sm:max-w-[500px] bg-black" ref={globeDivRef}>
-                <ArtistsGlobe countries={countries} mostArtistsCountry={mostArtistsCountry} targetCountryData={targetCountryData} handleAnalysisDone={handleAnalysisDone} canvasSize={canvasSize} ref={globeRef}/>
+                <ArtistsGlobe countries={countries} mostArtistsCountry={mostArtistsCountry} targetCountryData={targetCountryData} handleAnalysisDone={handleAnalysisDone} canvasSize={canvasSize}/>
             </div>
             <div className="bg-black text-white px-8 py-2 rounded-full border-2 border-white font-bold hover:cursor-pointer" onClick={handleShare}>
                 Share with friends
             </div>
+            {shareableLink}
         </div>
     )
 }

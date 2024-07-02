@@ -1,5 +1,4 @@
-import React,{ forwardRef } from 'react'
-import Globe, { GlobeMethods } from 'react-globe.gl'
+import Globe from 'react-globe.gl'
 import { useAppContext } from '../hooks/useAppContext'
 import { Country, Point, TargetCountryData } from '../constants'
 
@@ -11,8 +10,8 @@ type ArtistsGlobeProps = {
     canvasSize: number
 }
 
-const ArtistsGlobe = forwardRef(function ArtistsGlobe({countries, mostArtistsCountry, targetCountryData, handleAnalysisDone, canvasSize}: ArtistsGlobeProps, globeRef: React.ForwardedRef<GlobeMethods>){
-    const { setAnalysisDone } = useAppContext()
+const ArtistsGlobe = ({countries, mostArtistsCountry, targetCountryData, handleAnalysisDone, canvasSize}: ArtistsGlobeProps) => {
+    const { setAnalysisDone, appGlobeRef } = useAppContext()
     
     const handleGlobeReady = () => {
         handleAnalysisDone()
@@ -24,7 +23,7 @@ const ArtistsGlobe = forwardRef(function ArtistsGlobe({countries, mostArtistsCou
     
     return (
         <Globe 
-            ref={globeRef}
+            ref={appGlobeRef}
             width={canvasSize}
             height={canvasSize}
             rendererConfig={{preserveDrawingBuffer: true}}
@@ -48,6 +47,5 @@ const ArtistsGlobe = forwardRef(function ArtistsGlobe({countries, mostArtistsCou
         />
     )
 }
-)
 
 export default ArtistsGlobe
