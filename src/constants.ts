@@ -13,12 +13,6 @@ export type Country = {
     properties: CountryProperties
 }
 
-export type TargetCountryData = {
-    country: string
-    count: number
-    center: Point[]
-}
-
 export type Center = {
     country: string
     latitude: number

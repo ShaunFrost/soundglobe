@@ -1,25 +1,22 @@
 import Globe from 'react-globe.gl'
 import { useAppContext } from '../hooks/useAppContext'
-import { Country, Point, TargetCountryData } from '../constants'
+import { Country, Point } from '../constants'
 
 type ArtistsGlobeProps = {
     countries: Country[]
-    mostArtistsCountry: Point[]
-    targetCountryData: TargetCountryData
-    handleAnalysisDone: () => void
+    targetCountryCenter: Point
+    targetCountry: string
+    targetCountryCount: number
+    adjustGlobePointOfView: () => void
     canvasSize: number
 }
 
-const ArtistsGlobe = ({countries, mostArtistsCountry, targetCountryData, handleAnalysisDone, canvasSize}: ArtistsGlobeProps) => {
-    const { setAnalysisDone, appGlobeRef } = useAppContext()
+const ArtistsGlobe = ({countries, targetCountryCenter, targetCountry, targetCountryCount, adjustGlobePointOfView, canvasSize}: ArtistsGlobeProps) => {
+    const { appGlobeRef } = useAppContext()
     
     const handleGlobeReady = () => {
-        handleAnalysisDone()
-        setAnalysisDone(true)
+        adjustGlobePointOfView()
     }
-    // useEffect(() => {
-    //     console.log('Here in Artists Globe', countries, mostArtistsCountry)
-    // }, [countries, mostArtistsCountry])
     
     return (
         <Globe 
@@ -32,13 +29,13 @@ const ArtistsGlobe = ({countries, mostArtistsCountry, targetCountryData, handleA
             lineHoverPrecision={0}
             polygonsData={countries}
             polygonCapColor={(c) => {
-                return (c as Country).properties.ISO_A2 !== targetCountryData.country ? 'steelblue' : 'purple'
+                return (c as Country).properties.ISO_A2 !== targetCountry ? 'steelblue' : 'purple'
             }}
             polygonSideColor={() => 'rgba(0, 100, 0, 0.15)'}
             polygonAltitude={() => 0.01}
             polygonStrokeColor={() => '#111'}
-            labelsData={mostArtistsCountry}
-            labelText={() => `${targetCountryData.count} artists`}
+            labelsData={[targetCountryCenter]}
+            labelText={() => `${targetCountryCount} artists`}
             labelAltitude={0.05}
             labelLat={(c) => (c as Point).latitude}
             labelLng={(c) => (c as Point).longitude}
