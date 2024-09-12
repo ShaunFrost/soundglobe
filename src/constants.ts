@@ -28,3 +28,8 @@ export type WriteResponse = {
     success: boolean
     id: string
 }
+
+export type CountryArtistData = {
+    center: Point
+    count: number
+}

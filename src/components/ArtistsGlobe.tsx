@@ -1,6 +1,6 @@
 import Globe from 'react-globe.gl'
 import { useAppContext } from '../hooks/useAppContext'
-import { Country, Point } from '../constants'
+import { Country, Point, CountryArtistData } from '../constants'
 
 type ArtistsGlobeProps = {
     countries: Country[]
@@ -9,9 +9,11 @@ type ArtistsGlobeProps = {
     targetCountryCount: number
     adjustGlobePointOfView: () => void
     canvasSize: number
+    allCountriesArtistData: CountryArtistData[]
+    topArtistsCountries: Set<string>
 }
 
-const ArtistsGlobe = ({countries, targetCountryCenter, targetCountry, targetCountryCount, adjustGlobePointOfView, canvasSize}: ArtistsGlobeProps) => {
+const ArtistsGlobe = ({countries, adjustGlobePointOfView, canvasSize, allCountriesArtistData, topArtistsCountries}: ArtistsGlobeProps) => {
     const { appGlobeRef } = useAppContext()
     
     const handleGlobeReady = () => {
@@ -29,16 +31,20 @@ const ArtistsGlobe = ({countries, targetCountryCenter, targetCountry, targetCoun
             lineHoverPrecision={0}
             polygonsData={countries}
             polygonCapColor={(c) => {
-                return (c as Country).properties.ISO_A2 !== targetCountry ? 'steelblue' : 'purple'
+                const countryCode = (c as Country).properties.ISO_A2
+                return topArtistsCountries.has(countryCode) ? 'purple' : 'steelblue'
             }}
             polygonSideColor={() => 'rgba(0, 100, 0, 0.15)'}
             polygonAltitude={() => 0.01}
             polygonStrokeColor={() => '#111'}
-            labelsData={[targetCountryCenter]}
-            labelText={() => `${targetCountryCount} artists`}
+            labelsData={allCountriesArtistData}
+            labelText={(c) => {
+                const countValue = (c as CountryArtistData).count
+                return `${countValue} ${countValue > 1 ? 'artists' : 'artist'}`
+            }}
             labelAltitude={0.05}
-            labelLat={(c) => (c as Point).latitude}
-            labelLng={(c) => (c as Point).longitude}
+            labelLat={(c) => (c as CountryArtistData).center.latitude}
+            labelLng={(c) => (c as CountryArtistData).center.longitude}
             labelSize={2}
             onGlobeReady={handleGlobeReady}
         />

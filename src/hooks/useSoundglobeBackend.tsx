@@ -5,9 +5,9 @@ export const useSoundglobeBackend = () => {
 
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
-    const addImage = async (email: string, imageData: string) => {
+    const addImage = async (uid: string, imageData: string) => {
         const resp = await axios.post(`${BACKEND_URL}/create`, {
-            email,
+            id: uid,
             imageData
         })
         const data: WriteResponse = resp.data

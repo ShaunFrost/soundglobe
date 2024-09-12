@@ -34,7 +34,7 @@ export const useMusicBrainz = () => {
                 }
             }
         })
-        return {country: max_country, count: maxValue}
+        return {country: max_country, count: maxValue, countryMap}
     }
 
     return {
