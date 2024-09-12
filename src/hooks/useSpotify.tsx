@@ -14,6 +14,7 @@ export const useSpotify = () => {
                 Authorization: `Bearer ${token}`
             }
         })
+        console.log('Artists response', response);
         const artists: string[] = response.data.items.map((item: ItemObject) => {
             return item.name
         })
@@ -26,7 +27,7 @@ export const useSpotify = () => {
                 Authorization: `Bearer ${token}`
             }
         })
-        // console.log('Email resp', response)
+        console.log('Email resp', response)
         const email: string = response.data.email
         return email
     }

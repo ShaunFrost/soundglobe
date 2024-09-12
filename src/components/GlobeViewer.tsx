@@ -1,6 +1,6 @@
 import ArtistsGlobe from './ArtistsGlobe'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSoundglobeBackend } from '../hooks/useSoundglobeBackend'
+// import { useSoundglobeBackend } from '../hooks/useSoundglobeBackend'
 import { Country, Point } from '../constants'
 import { useAppContext } from '../hooks/useAppContext'
 
@@ -15,10 +15,10 @@ const GlobeViewer = ({countries, targetCountryCenter, targetCountry, targetCount
 
     const globeDivRef = useRef<HTMLDivElement>(null)
     const [canvasSize, setCanvasSize] = useState(window.innerWidth > 500 ? 500 : window.innerWidth)
-    const [shareableLink, setShareableLink] = useState('')
-    const { addImage } = useSoundglobeBackend()
-    const { globePOV, userEmail, appGlobeRef } = useAppContext()
-    const [isCreatingLink, setIsCreatingLink] = useState(false)
+    // const [shareableLink, setShareableLink] = useState('')
+    // const { addImage } = useSoundglobeBackend()
+    const { globePOV, appGlobeRef } = useAppContext()
+    // const [isCreatingLink, setIsCreatingLink] = useState(false)
 
     const adjustGlobePointOfView = useCallback(() => {
         if (!appGlobeRef.current) return
@@ -31,30 +31,30 @@ const GlobeViewer = ({countries, targetCountryCenter, targetCountry, targetCount
         }
     }, [globePOV, appGlobeRef]);
 
-    const openTwitterToPost = (url: string) => {
-        window.open(`https://twitter.com/intent/tweet?url=${url}`)
-    }
+    // const openTwitterToPost = (url: string) => {
+    //     window.open(`https://twitter.com/intent/tweet?url=${url}`)
+    // }
 
-    const writeImage = async (email: string, imageData: string) => {
-        const { success, id } = await addImage(email, imageData)
-        if (success) {
-            const url = import.meta.env.VITE_BACKEND_URL + "/image/" + id
-            setShareableLink(url)
-            openTwitterToPost(url)
-        }
-    }
+    // const writeImage = async (email: string, imageData: string) => {
+    //     const { success, id } = await addImage(email, imageData)
+    //     if (success) {
+    //         const url = import.meta.env.VITE_BACKEND_URL + "/image/" + id
+    //         setShareableLink(url)
+    //         openTwitterToPost(url)
+    //     }
+    // }
 
     const handleShare = () => {
-        if (!appGlobeRef.current) return
-        if (shareableLink) {
-            openTwitterToPost(shareableLink)
-            return
-        }
-        setIsCreatingLink(true)
-        const renderer = appGlobeRef.current.renderer()
-        const imageDataFromGlobe: string = renderer.domElement.toDataURL('image/jpeg', 0.5)
+        // if (!appGlobeRef.current) return
+        // if (shareableLink) {
+        //     openTwitterToPost(shareableLink)
+        //     return
+        // }
+        // setIsCreatingLink(true)
+        // const renderer = appGlobeRef.current.renderer()
+        // const imageDataFromGlobe: string = renderer.domElement.toDataURL('image/jpeg', 0.5)
 
-        writeImage(userEmail, imageDataFromGlobe).finally(() => setIsCreatingLink(false))
+        // writeImage(userEmail, imageDataFromGlobe).finally(() => setIsCreatingLink(false))
     }
 
     useEffect(() => {
@@ -93,10 +93,11 @@ const GlobeViewer = ({countries, targetCountryCenter, targetCountry, targetCount
                     adjustGlobePointOfView={adjustGlobePointOfView} canvasSize={canvasSize}
                 />
             </div>
-            <div className={`bg-black text-white px-8 py-2 rounded-full border-2 border-white font-bold hover:cursor-pointer ${isCreatingLink ? 'opacity-70' : ''}`} onClick={handleShare}>
-                {isCreatingLink ? 'Creating link...' : 'Share with friends'}
+            <div className={`bg-black text-white px-8 py-2 rounded-full border-2 border-white font-bold hover:cursor-pointer `} onClick={handleShare}> {/**${isCreatingLink ? 'opacity-70' : ''} */}
+                {/* {isCreatingLink ? 'Creating link...' : 'Share with friends'} */}
+                Share with friends
             </div>
-            {shareableLink}
+            {/* {shareableLink} */}
         </div>
     )
 }
