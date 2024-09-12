@@ -5,7 +5,7 @@ const Landing = () => {
         const spotifyAuthUrl = import.meta.env.VITE_SPOTIFY_AUTH_URL
         const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
         const redirectUri = import.meta.env.VITE_RIDIRECT_URI
-        const scopes = ["user-read-email", "user-read-private", "user-top-read"]
+        const scopes = ["user-read-recently-played", "user-library-read", "user-top-read"]
         window.location.href = `${spotifyAuthUrl}?client_id=${clientId}&response_type=token&scope=${scopes.join(" ")}&redirect_uri=${redirectUri}`
     }
     return (
